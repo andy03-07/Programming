@@ -1,0 +1,9 @@
+.counter-cont{
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid white;
+    gap: 15px;
+    color: aliceblue;
+}
