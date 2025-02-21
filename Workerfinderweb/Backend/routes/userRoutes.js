@@ -50,3 +50,5 @@ router.put('/:id', updateOneUser);
 router.get('/profile', authMiddleware, getUserProfile);
 
 module.exports = router;
+
+

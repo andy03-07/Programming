@@ -1,34 +1,3 @@
-// const express = require('express');
-// const mongoose = require('mongoose');
-// require('dotenv').config();
-// const connectDB = require('./config/db');
-// const authRoutes = require('./routes/authRoutes');
-// const workerRoutes = require('./routes/workerRoutes');
-// const userRoutes = require('./routes/userRoutes');
-// const authMiddleware = require('./middleware/authMiddleware');
-
-// const app = express();
-
-// // Connect to MongoDB
-// connectDB();
-
-// // Middleware
-// app.use(express.json());
-
-// // Routes
-// app.use('/api/auth', authRoutes);
-// app.use('/api/workers', workerRoutes);
-// app.use('/api/user', authMiddleware, userRoutes);
-
-// // Start Server
-// const PORT = process.env.PORT || 5001;
-// app.listen(PORT, () => {
-//     console.log(`Server running on port ${PORT}`);
-// });
-
-// module.exports = app;
-
-
 // app.js
 
 const express = require('express');
@@ -167,12 +136,6 @@ app.get("/api/history", authenticateJWT, async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch user history", details: err.message });
   }
-});
-
-// Start Server
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
 });
 
 module.exports = app;

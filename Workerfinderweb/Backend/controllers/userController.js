@@ -1,85 +1,3 @@
-// const User = require('../models/User');
-
-// const addToHistory = async (req, res) => {
-//     try {
-//         const { userId } = req.user;
-//         const { workerId } = req.body;
-
-//         await User.findByIdAndUpdate(userId, {
-//             $push: { history: { workerId, date: new Date() } }
-//         });
-
-//         res.status(200).json({ message: "History updated" });
-//     } catch (error) {
-//         res.status(500).json({ message: "Error updating history", error });
-//     }
-// };
-
-// module.exports = { addToHistory };
-
-// const History = require('../models/History');  // Import History model
-
-// // Function to add a history entry when a user hires a worker
-// exports.addToHistory = async (req, res) => {
-//   const { userId, workerId } = req.body;  // Expecting these fields in the request body
-
-//   if (!userId || !workerId) {
-//     return res.status(400).json({ error: 'userId and workerId are required' });
-//   }
-
-//   try {
-//     // Create a new history entry
-//     const history = new History({
-//       user: userId,
-//       worker: workerId,
-//     });
-
-//     // Save the history entry to the database
-//     await history.save();
-
-//     // Respond with success
-//     res.status(201).json({ message: 'History entry added successfully', history });
-//   } catch (err) {
-//     // Handle errors
-//     res.status(500).json({ error: 'Failed to add history entry', details: err.message });
-//   }
-// };
-
-// ................
-
-// // Update one user
-// const updateOneUser = async (req, res) => {
-//   const { id } = req.params;
-//   const updates = req.body;
-
-//   try {
-//     const result = await User.updateOne({ _id: id }, updates);
-//     if (result.nModified === 0) {
-//       return res.status(404).json({ message: 'User not found or no changes made' });
-//     }
-//     res.status(200).json({ message: 'User updated successfully' });
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error updating user', error: error.message });
-//   }
-// };
-
-// // Update many users based on criteria
-// const updateManyUsers = async (req, res) => {
-//   const { criteria, updates } = req.body; // criteria can include any user field to filter users
-
-//   try {
-//     const result = await User.updateMany(criteria, updates);
-//     if (result.nModified === 0) {
-//       return res.status(404).json({ message: 'No users matched the criteria or no changes made' });
-//     }
-//     res.status(200).json({ message: 'Users updated successfully', modifiedCount: result.nModified });
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error updating users', error: error.message });
-//   }
-// };
-
-
-
 const User = require('../models/UserModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');  // Include bcrypt for hashing passwords
@@ -220,3 +138,6 @@ const getUserProfile = async (req, res) => {
 };
 
 module.exports = { registerUser, loginUser, updateOneUser, updateManyUsers, findByIdAndUpdateUser, getUserProfile };
+
+
+

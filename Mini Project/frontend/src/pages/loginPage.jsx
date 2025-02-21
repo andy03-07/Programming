@@ -1,0 +1,89 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { loginSuccess } from '../Redux/authSlice';
+import {useDispatch} from 'react-redux'
+import axios from 'axios';
+import '../Styles/login.css';
+
+const LoginPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({ name: '', password: '' });
+  const [error, setError] = useState(''); 
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(''); 
+  
+    if (!form.name || !form.password) {
+      setError('Please enter both username and password');
+      return;
+    }
+  
+    try {
+      const response = await axios.post('http://localhost:5000/api/login', form);
+    
+        if(response.status === 200) {
+        const user = response.data.user;
+        dispatch(loginSuccess(user));
+
+        if (response.data.user.role === 'admin') {
+          console.log(response.data);
+          alert('Admin login successful');
+          navigate(`/admin/${response.data.user.categories}`);
+        } else {
+          console.log(response.data);
+          alert('User login successful');
+          navigate('/'); 
+        }
+        }
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+          console.log(error.response);
+        setError(error.response.data.message);
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
+    }
+    
+  };
+  
+
+  return (
+    <div className="login-container">
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <label>User Name</label>
+        <input
+          type="text"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          placeholder="Enter your username"
+        />
+
+        <label>Password</label>
+        <input
+          type="password"
+          name="password"
+          value={form.password}
+          onChange={handleChange}
+          placeholder="Enter your password"
+        />
+
+         <p style={{color:'red',fontWeight:'700',marginTop:'10px'}}>{error}</p>
+
+        <button type="submit" className="login-btn">Login</button>
+      </form>
+      
+      <a href="#forgot-password" className="forgot-password">Forgot Password?</a>
+    </div>
+  );
+};
+
+export default LoginPage;

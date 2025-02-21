@@ -1,5 +1,4 @@
-#include<stdio.h>
-
+#include<stdio.h>             
 int main(){
     // int x,y;
 
@@ -31,38 +30,38 @@ int main(){
 
 
 
-//       int x,y,;
+    //   int x,y;
 
-//      printf("enter the no of rows you want to print:");
-//      scanf("%d",&x);
-//      printf("enter the no of columns you want to print:");
-//      scanf("%d",&y);
+    //  printf("enter the no of rows you want to print:");
+    //  scanf("%d",&x);
+    //  printf("enter the no of columns you want to print:");
+    //  scanf("%d",&y);
      
-//      for(int i=1;i<=x;i++){
-//         for(int j=1;j<=i;j++){
-//             printf("%d ",j);
-//         }
-//         printf("\n");
-//      }
-// }
+    //  for(int i=1;i<=x;i++){
+    //     for(int j=1;j<=i;j++){
+    //         printf("%d ",j);
+    //     }
+    //     printf("\n");
+    //  }
 
 
 
-//       int x,y,a;
 
-//      printf("enter the no of rows you want to print:");
-//      scanf("%d",&x);
-//      printf("enter the no of columns you want to print:");
-//      scanf("%d",&y);
-//      a=1;
-//      for(int i=1;i<=x;i++){
-//         for(int j=1;j<=i;j++){
-//             printf("%d ",a);
-//             a++;
-//         }
-//         printf("\n");
-//      }
-// }
+    //   int x,y,a;
+
+    //  printf("enter the no of rows you want to print:");
+    //  scanf("%d",&x);
+    //  printf("enter the no of columns you want to print:");
+    //  scanf("%d",&y);
+    //  a=1;
+    //  for(int i=1;i<=x;i++){
+    //     for(int j=1;j<=i;j++){
+    //         printf("%d ",a);
+    //         a++;
+    //     }
+    //     printf("\n");
+    //  }
+
 
     //   int x,y;
 
@@ -125,8 +124,8 @@ int main(){
 //      scanf("%d",&y);
 
 //      for(int i=1;i<=x;i++){
-//         for(int j=1;j<=xory+1-i;j++){
-//             printf("%d ",j);
+//         for(int j=y;j>=i;j--){
+//             printf("*");
 //         }
 //         printf("\n");
 //      }
@@ -226,7 +225,6 @@ int main(){
 //         }
 //         printf("\n");
 //      }
-
 //      }
 
 
@@ -321,10 +319,9 @@ int main(){
     //     for(int k=1;k<=i;k++){
     //     printf("* ");
     //     }
-    //     for(int l=1;l<=y;l++){
+    //     for(int l=1;l<=y-i;l++){
     //     printf("* ");
     //     }
-    //          y--;
 
     //     printf("\n");
     //  }
@@ -386,7 +383,7 @@ int main(){
     //     for(int k=1;k<=i;k++){
     //     printf("%d ",k);
     //     }
-    //     for(int l=i-1;l>=1;l--){     if normal the 1\n121\n12312
+    //     for(int l=i-1;l>=1;l--){    // if normal the 1\n121\n12312
     //     printf("%d ",l);
     //     }
 
@@ -468,9 +465,9 @@ int main(){
     //     for(int k=1;k<=i;k++){
     //     printf("* ");
     //     }
-    //     (// for(int l=1;l<i;l++){
-    //     // printf("* ");
-    //     // })
+    //     for(int l=1;l<i;l++){
+    //     printf("* ");
+    //     }
 
     //     printf("\n");
     //  }
@@ -482,7 +479,7 @@ int main(){
 //      printf("enter the no of columns you want to print:");
 //      scanf("%d",&y);
 //     nsp=y/2;
-//     nst=1;5
+//     nst=1;
 //     ml=x/2 + 1;
 //      for(int i=1;i<=x;i++){
 //         for(int j=1;j<=nsp;j++){
@@ -499,15 +496,12 @@ int main(){
 //             nsp++;
 //             nst-=2;
 //         }
-// //         // for(int l=1;l<i;l++){
-// //         // printf("* ");
-// //         // }
-
-//         printf("\n");
-// //      }
-
-
+// for(int l=1;l<i;l++){
+// printf("* ");
 // }
+//  printf("\n");
+//  }
+
 
 
 //    int x,y;
@@ -569,20 +563,19 @@ int main(){
 //      }
 //      printf("\n");
 //      for(int i=1;i<=x-1;i++){
-//     for(int a=1;a<=y-1;a++){
+//     for(int a=1;a<=y-i;a++){
 //         printf("%d ",a);
 //     }
 //         for(int j=1;j<=2*i-1;j++){
 //             printf("  ");
 //         }
-//         for(int k=1;k<=y-1;k++){
+//         for(int k=1;k<=y-i;k++){
 //         printf("%d ",k+y);
         
 //         }
-//         y--;
 
 //         printf("\n");
-    //  }
+//      }
 
 
     // int x,y;
@@ -628,27 +621,44 @@ int main(){
     
 
     //     }
-    int x,y;
+    // int x,y;
 
 
-    printf("enter the no of rows you want to print:");
-     scanf("%d",&x);
-     printf("enter the no of columns you want to print:");
-     scanf("%d",&y);
+    // printf("enter the no of rows you want to print:");
+    //  scanf("%d",&x);
+    //  printf("enter the no of columns you want to print:");
+    //  scanf("%d",&y);
 
-     for(int i=1;i<=x;i++){
-        for(int j=1;j<=y-i;j++){
+    //  for(int i=1;i<=x;i++){
+    //     for(int j=1;j<=y-i;j++){
+    //         printf("  ");
+    //     }
+    //     for(int k=i;k>=1;k--){
+    //     printf("%d ",k);
+    //     }
+    //     for(int l=2;l<=i;l++){
+    //     printf("%d ",l);
+    //     }
+
+    //     printf("\n");
+    //  }
+
+    int space,symbol,size;
+    size=3;
+            for(int ln=1;ln<=2*size-1;ln++){
+            if(ln<=size) space=size-ln;
+            else space=ln-size;
+            for(;space>0;space--){
             printf("  ");
-        }
-        for(int k=i;k>=1;k--){
-        printf("%d ",k);
-        }
-        for(int l=2;l<=i;l++){
-        printf("%d ",l);
-        }
-
-        printf("\n");
-     }
+            }
+            if(ln<=size) symbol=2*ln-1;
+            else symbol=2*((2*size-1)+1-ln)-1;
+            for(;symbol>0;symbol--){
+            if(symbol%2==0) printf("  ");
+            else printf("+ ");
+            }
+            printf("\n");
+            }
 
 }
 
