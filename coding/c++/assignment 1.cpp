@@ -1,4 +1,4 @@
-// #include<stdio.h> 
+#include<iostream> 
 // void main() 
 // { 
 
@@ -34,9 +34,16 @@
 //     putchar(*a);
 //     }
 // }
-// int main(){
+int main(){
 //     char s[]="sand";
 //     myfun(s);
-// }
+int x = 1, y = 1, z = 0;
+    if (x < y < z) {
+        cout<< "True";
+    } else {
+        cout<< "False";
+    }
+    return 0;
+}
 
 

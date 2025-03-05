@@ -4,9 +4,12 @@ import Header from '../../pages/header'
 import axios from 'axios'
 import Cleaner from '../../logos/cleaner.jpg'
 import '../../Styles/admin.css';
+import Navi from '../../logos/greater-than-solid.svg';
+import profile from '../../logos/smiling-young-man-illustration_1308-174401.avif'
 
 const AdminCleaningPage = () => {
   const user = useSelector((state) => state.auth.user);
+  const [selectWorker, setSelectWorker] = useState('');
   const [errors,seterrors] = useState('');
   const [workers, setWorkers] = useState([]);
   const [newWorker, setNewWorker] = useState({
@@ -32,7 +35,7 @@ const AdminCleaningPage = () => {
         return;
       }
       const response = await axios.get(`http://localhost:5000/api/getcleaner/${adminId}`);
-      setWorkers(response.data);
+      setWorkers(response.data.workers);
     } catch (error) {
       console.error("Error fetching workers:", error);
     }
@@ -59,9 +62,18 @@ const AdminCleaningPage = () => {
     try {
       await axios.delete(`http://localhost:5000/api/deletecleaner/${id}`);
       setWorkers(workers.filter((worker) => worker._id !== id));
+      setSelectWorker('');
     } catch (error) {
       console.error("Error deleting worker:", error);
     }
+  };
+
+  const opencard = (worker) => {
+          setSelectWorker(worker);
+  }
+
+  const closecard = () => {
+    setSelectWorker('');
   };
 
   return (
@@ -111,21 +123,47 @@ const AdminCleaningPage = () => {
             <td>{worker.experience}</td>
             <td>{worker.specialty}</td>
             <td >
-            <button style={{display:'block',position:'relative',left:'28px'}} onClick={() => window.location.href = `tel:${worker.contact}`} className="contact-btn">Call</button>
-                    <button onClick={() => handleDeleteWorker(worker._id)} className="delete-btn">Delete</button>
-                  </td>
-                        </tr>
-                           ))}
-                         </tbody>
-                       </table>
-                     ) : (
-                       <p className="admin-no-workers">No Cleaner available.</p>
-                     )}
-                   </div>
-             
-                   <img className="img" src={Cleaner} alt="Mason" />
+            <img className='navi' src={Navi} alt="" onClick={()=>opencard(worker)} />
+                                               
+                     </td>
+    
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="admin-no-workers">No Cleaners available.</p>
+            )}
+          </div>
+    
+          <img className="img" src={Cleaner} alt="Plumber" />
+    
+           {selectWorker && (
+            <div className="worker-card">
+              <div className="worker-card-content">
+                <div className="profile-pic">
+                    <img src={profile} alt="Profile" />
                  </div>
-               );
-             };
+                <span className="close-btn" onClick={closecard}>
+                  &times;
+                </span>
+                <h3 style={{marginLeft:'100px'}}>{selectWorker.workername}</h3>
+                <p>📍 <span style={{fontWeight:'bolder'}}>Address:</span> {selectWorker.address}</p>
+                <p>📞 <span style={{fontWeight:'bolder'}}>Contact:</span>  {selectWorker.contact}</p>
+                <p>🛠 <span style={{fontWeight:'bolder'}}>Specialty:</span> {selectWorker.specialty}</p>
+                <p>⭐ <span style={{fontWeight:'bolder'}}>Experience:</span>  {selectWorker.experience} years</p>
+                <p>⭐<span style={{fontWeight:'bolder'}}>Ratings:</span>{selectWorker.averageRating}</p>
+                </div>
+                 
+                 <div style={{display:'flex',justifyContent:'space-around',marginTop:'20px',marginLeft:'-40px'}}>
+                <button style={{display:'block',position:'relative',left:'32px'}} onClick={() => window.location.href = `tel:${selectWorker.contact}`} 
+                       className="contact-btn">Call</button>
+                       <button className='delete-btn' onClick={() => handleDeleteWorker(selectWorker._id)} >Delete</button>
+                </div>
+            </div>
+          )}
+        </div>
+      );
+    };
 
 export default AdminCleaningPage;

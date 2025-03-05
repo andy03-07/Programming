@@ -83,11 +83,18 @@ int main() {
 // //      for(int i = 0; i < size; i++){
 // //     cout << arr[i] << endl;
 
-string s="hello";
+// string s="hello";
 //string s1=s.append("world");  
 //s+="world";
 //s.append("world");
-s="world";
-cout<<s<<endl;
+// s="world";
+// cout<<s<<endl;
+int x = 1, y = 1, z = 0;
+    if (x < y < z) {
+        cout<< "True";
+    } else {
+        cout<< "False";
+    }
+    return 0;
 }
 

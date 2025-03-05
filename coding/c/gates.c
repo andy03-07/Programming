@@ -98,8 +98,27 @@
 #include<stdio.h>
 
 int main(){
-    char c[5]="hello";
-    // fgets(c,5,stdin);
-    gets(c);
-    printf("%s",strlen(c));
+    // char c[5]="hello";
+    // // fgets(c,5,stdin);
+    // gets(c);
+    // printf("%s",strlen(c));
+
+    // int x = 1, y = 1, z = 0;
+    // if (x < y < z) {
+    //     printf("True");
+    // } else {
+    //     printf("False");
+    // }
+    // return 0;
+
+    int arr[] = {1,2,3,4,5};
+    printf("%d",arr);
+
+    // int x=5,y;
+    // // x=printf("h");
+    // x=scanf("%d%d",&x,&y);
+    // printf("%d",x);
+
+    
 }
+

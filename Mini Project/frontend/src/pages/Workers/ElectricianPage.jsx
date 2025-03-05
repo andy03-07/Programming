@@ -1,10 +1,14 @@
-// src/pages/Workers/ElectricianPage.js
 import React , {useEffect,useState}from 'react';
 import axios from "axios"
 import '../../Styles/WorkerList.css';
+import Navi from '../../logos/greater-than-solid.svg';
+import profile from '../../logos/smiling-young-man-illustration_1308-174401.avif'
 
 const ElectricianPage = () => {
   const [workers,setWorkers] = useState([]);
+   const [selectedRating, setSelectedRating] = useState(0);
+      const [submittedRating, setSubmittedRating] = useState({});
+      const [selectWorker, setSelectWorker] = useState('');
 
   useEffect(() => {
     fetchWorkers();
@@ -13,11 +17,38 @@ const ElectricianPage = () => {
   const fetchWorkers = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/getelectrician/all");
-      setWorkers(response.data);
+      setWorkers(response.data.workers);
     } catch (error) {
       console.error("Error fetching workers:", error);
     }
   };
+
+  const opencard = (worker) => {
+    setSelectWorker(worker);
+}
+
+const closecard = () => {
+setSelectWorker('');
+};
+
+const handleRating = (rating) => {
+  setSelectedRating(rating);
+};
+
+const submitRating = async (workerId) => {
+  if (!selectedRating) {
+    alert("Please select a rating before submitting!");
+    return;
+  }
+  try {
+    await axios.post(`http://localhost:5000/api/rateelectrician/${workerId}`, { rating: selectedRating });
+    setSubmittedRating((prev) => ({ ...prev, [workerId]: true }));     alert("Rating submitted successfully!");
+    fetchWorkers(); 
+  } catch (error) {
+    console.error("Error submitting rating:", error);
+    alert("Failed to submit rating.");
+  }
+};
 
   return (
     <div>
@@ -36,27 +67,77 @@ const ElectricianPage = () => {
       </thead>
       <tbody>
         {workers.map((electrician, index) => (
-          <tr key={index} className="worker-card">
+          <tr key={index} className="worker card">
             <td>{electrician.workername}</td>
             <td>{electrician.contact}</td>
             <td>{electrician.address}</td>
             <td>{electrician.experience}</td>
             <td>{electrician.specialty}</td>
             <td>
-              <button
-                onClick={() => window.location.href = `tel:${electrician.contact}`}
-                className="contact-btn"
-              >
-                Call
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
-  );
-};
+              <img className='navi' src={Navi} alt="" onClick={()=>opencard(electrician)} />
+                                                                                          
+                               </td>
+               
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                    </div>
+                                
+                     {selectWorker && (
+                      <div style={{position:'absolute', top:'200px', left:'750px'}}className="worker-card">
+                        <div className="worker-card-content">
+                          <div className="profile-pic">
+                              <img src={profile} alt="Profile" />
+                           </div>
+                          <span className="close-btn" onClick={closecard}>
+                            &times;
+                          </span>
+                          <h3 style={{marginLeft:'100px'}}>{selectWorker.workername}</h3>
+                          <p>📍 <span style={{fontWeight:'bolder'}}>Address:</span> {selectWorker.address}</p>
+                          <p>📞 <span style={{fontWeight:'bolder'}}>Contact:</span>  {selectWorker.contact}</p>
+                          <p>🛠 <span style={{fontWeight:'bolder'}}>Specialty:</span> {selectWorker.specialty}</p>
+                          <p>⭐ <span style={{fontWeight:'bolder'}}>Experience:</span>  {selectWorker.experience} years</p>
+                          <p>⭐<span style={{fontWeight:'bolder'}}>Ratings:</span>{selectWorker.averageRating}</p>
+             
+                          {submittedRating [selectWorker._id] ? (
+                          <p style={{ fontWeight: '800', color: 'gray', marginLeft: '50px' }}>Already Rated</p> 
+                           ) : (
+                          <div className="rating-section">
+                          <p><span style={{ fontWeight: '800',color:'gery',marginLeft:'50px' }}>Rate this Worker</span></p>
+                           <div className="star-rating" style={{marginLeft:'65px'}}>
+                             {[1, 2, 3, 4, 5].map((star) => (
+                               <span
+                                 key={star}
+                                 onClick={() => handleRating(star)}
+                                 style={{
+                                   cursor: "pointer",
+                                   fontSize: "24px",
+                                   color: star <= selectedRating ? "gold" : "gray",
+                                 }}
+                               >
+                                 ★
+                               </span>
+                             ))}
+                           </div>
+                           {submittedRating [selectWorker._id] ? (
+                             <p style={{marginLeft:'50px'}}>Thanks for rating!</p>
+                           ):(<button style={{marginLeft:'70px'}} className="submit-rating-btn" onClick={() => submitRating(selectWorker._id)} disabled={submittedRating===0}>
+                             Submit Rating
+                         </button>)}
+                           
+                          </div>
+                           )}
+                          </div>
+                           
+                           <div style={{display:'flex',justifyContent:'space-around',marginTop:'20px',marginLeft:'-40px'}}>
+                          <button style={{display:'block',position:'relative',left:'10px'}} onClick={() => window.location.href = `tel:${selectWorker.contact}`} 
+                                 className="contact-btn">Call</button>
+                          </div>
+                      </div>
+                    )}
+                  </div>
+                );
+               };
 
 export default ElectricianPage;

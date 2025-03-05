@@ -13,7 +13,7 @@ import clean from '../logos/clean.png'
 import logoo from '../logos/logoo.png'
 import pro from '../logos/user.svg';
 import flag from '../logos/india.png'
-import location from '../logos/location-crosshairs-solid.svg'
+import loc from '../logos/location-crosshairs-solid.svg'
 import globe from '../logos/globe-solid.svg';
 import noti from '../logos/bell-solid.svg';
 import search from '../logos/magnifying-glass-solid.svg';
@@ -32,6 +32,8 @@ const categories = [
   const Header = () => {
     const user = useSelector((state)=> state.auth.user);
     const navigate = useNavigate();
+
+    const [locationName, setLocationName] = useState("");
   
     const [showChat, setShowChat] = useState(false);
   const [message, setMessage] = useState("");
@@ -57,6 +59,27 @@ const categories = [
       'Search by "Address"',
     ];
   
+    useEffect(() => {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+          const { latitude, longitude } = position.coords;
+  
+          try {
+              const response = await axios.get(`https://nominatim.openstreetmap.org/reverse`, {
+                  params: {
+                      lat: latitude,
+                      lon: longitude,
+                      format: "json",
+                  },
+              });
+  
+              const address = response.data.display_name;
+              setLocationName(address);
+          } catch (error) {
+              console.error("Error fetching location:", error);
+          }
+      });
+  }, []);
+
     useEffect(() => {
       const interval = setInterval(() => {
         setPlaceholderIndex((prevIndex) => (prevIndex + 1) % placeholderTexts.length);
@@ -118,14 +141,19 @@ const handleSearchClick = () => {
 
           
         <div className='location'>
-          <img style={{height:'30px',width:'30px'}} src={location} alt="" />
-        <div className="country">
-          <div className="country-img">
-            <img src={flag}/>
-          </div>
-          India
-        </div>
-        </div>
+                  <img style={{height:'30px',width:'30px'}} src={loc} alt="" />
+                <div className="country">
+                  <div className="country-img">
+                    <img src={flag}/>
+                  </div>
+                  {locationName ? (
+                        // <p>{locationName.split(",").slice(0,2).join(", ")}</p>
+                        <p style={{fontWeight:"600"}}>{locationName.split(",")[0]}</p>
+                    ) : (
+                        <p style={{fontWeight:"600"}}>Fetching location...</p>
+                    )}
+                </div>
+                </div>
 
         <div className="lang-pan3">
         <img style={{height:'25px',width:'25px'}} className='globe' src={globe} alt="" />

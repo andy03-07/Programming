@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const Admin = require("../models/adminModel");
 
 const registerUser = async (req, res) => {
-  const { name, mobileNumber, email, role, category, password } = req.body;
+  const { name, mobileNumber, email, role, category, password ,location } = req.body;
 
   try {
     const userExists = await User.findOne({ email });
@@ -21,9 +21,9 @@ const registerUser = async (req, res) => {
         return res.status(400).json({ message: "Admin must have at least one category" });
       }
 
-      newUser = new Admin({ name, mobileNumber, email, role, category, password });
+      newUser = new Admin({ name, mobileNumber, email, role, category, password,location });
     } else {
-      newUser = new User({ name, mobileNumber, email, role, password });
+      newUser = new User({ name, mobileNumber, email, role, password,location });
     }
 
     await newUser.save();
@@ -36,7 +36,7 @@ const registerUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  const { name, password } = req.body;
+  const { name, password ,location} = req.body;
 
   try {
     let user = await Admin.findOne({ name });
@@ -52,11 +52,16 @@ const loginUser = async (req, res) => {
     }else if (user.password !== password) {
       return res.status(400).json({ message: "Invalid Credentials" });
     }
+
+    if (location && location.latitude && location.longitude) {
+      user.location = location;
+      await user.save();
+    }
      
     res.status(200).json({ 
     message: role === "admin" ? 'Admin logged in successfully' : 'User logged in successfully',
     user: { id: user._id, name: user.name, email: user.email, role: user.role, categories: user.category ,mobileNumber:user.mobileNumber,
-      password:user.password
+      password:user.password, location:user.location
     }
     });
   } catch (err) {

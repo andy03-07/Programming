@@ -72,7 +72,7 @@ h2 {
 }
 
 
-.worker-card {
+.worker card {
   margin-top: 1rem;
   width: 220px;
   padding: 1.5rem;
@@ -81,7 +81,7 @@ h2 {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
-.worker-card  button {
+.worker card  button {
   padding: 0.7rem 1.5rem;
   background-color: #003366;
   color: white;
@@ -91,31 +91,104 @@ h2 {
   transition: background-color 0.3s;
 }
 
-.worker-card:hover {
+.worker card:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-.worker-card button:hover {
+.worker card button:hover {
   background-color: #005bb5; /* Hover effect for the button */
 }
 
-.worker-card img {
+.worker card img {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   margin-bottom: 1rem;
 }
 
-.worker-card h3 {
+.worker card h3 {
   font-size: 1.3rem;
   margin-bottom: 0.5rem;
 }
 
-.worker-card p {
+.worker card p {
   font-size: 0.95rem;
   color: #666;
 }
 
+.worker-card {
+  position: absolute;
+  top: 100px;
+  left: 500px;
+  width: 350px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.rating-section {
+  margin-top: 10px;
+}
+
+.star {
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.star:hover,
+.star.selected {
+  color: gold;
+  transform: scale(1.2);
+}
+
+.submit-rating-btn {
+  display: block;
+  margin-top: 10px;
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-rating-btn:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+.profile-pic img {
+  width: 120px;
+  height: 150px;
+  border-radius: 50%;
+  margin-left: 70px;
+  border: 3px solid #dcdcdc;
+  transition: 0.3s;
+}
+
+.profile-pic img:hover {
+  border-color: #b0b0b0;
+  transform: scale(1.05);
+}
+.worker-card-content {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+.worker-card-content p{
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 30px;
+  cursor: pointer;
+}
 
 

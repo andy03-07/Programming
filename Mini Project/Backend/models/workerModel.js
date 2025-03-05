@@ -8,7 +8,13 @@ const workerSchema = new mongoose.Schema(
             experience:{ type:String,required:true},
             specialty: { type:String,required:true},
             category:{type:String, required:true},
+            ratings: [{ type: Number }] ,
             adminId: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", required: true },
+            location: { 
+                latitude: Number,
+                longitude: Number,
+                address: String,
+            },
           
     }
 )

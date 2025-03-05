@@ -243,9 +243,20 @@
 
 class Test {
     public static void main(String[] args) {
-        System.out.println("Java is working perfectly!");
-        Test obj = new Test();
-        System.out.println(obj);
+        // System.out.println("Java is working perfectly!");
+        // Test obj = new Test();
+        // System.out.println(obj);
+    //     int x = 1, y = 1, z = 0;
+    // if (x < y < z) {
+    //     System.out.println("True");
+    // } else {
+    //     System.out.println("False");
+    // }
+    // return;
+    int[] arr = new int[2];
+    arr[0] = 1;
+    arr[1] = 2;
+    System.out.println(0[arr]);
     }
 }
 

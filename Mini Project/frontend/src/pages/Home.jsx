@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { useEffect,useState} from 'react';
 import { useSelector } from 'react-redux';
 import '../Styles/home.css';
@@ -18,7 +19,7 @@ import ele from '../logos/electric.jpg'
 import mas from '../logos/mason.jpg'
 import pain from '../logos/paint.jpg'
 import flag from '../logos/india.png'
-import location from '../logos/location-crosshairs-solid.svg'
+import loc from '../logos/location-crosshairs-solid.svg';
 import globe from '../logos/globe-solid.svg';
 import noti from '../logos/bell-solid.svg';
 import search from '../logos/magnifying-glass-solid.svg';
@@ -37,8 +38,30 @@ const HomePage = () => {
   const user = useSelector((state)=> state.auth.user);
   const navigate = useNavigate();
 
+  const [locationName, setLocationName] = useState("");
   const [showChat, setShowChat] = useState(false);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+            const response = await axios.get(`https://nominatim.openstreetmap.org/reverse`, {
+                params: {
+                    lat: latitude,
+                    lon: longitude,
+                    format: "json",
+                },
+            });
+
+            const address = response.data.display_name;
+            setLocationName(address);
+        } catch (error) {
+            console.error("Error fetching location:", error);
+        }
+    });
+}, []);
 
   const handleChatToggle = () => {
     setShowChat(!showChat);
@@ -186,12 +209,17 @@ const HomePage = () => {
 
           
         <div className='location'>
-          <img style={{height:'30px',width:'30px'}} src={location} alt="" />
+          <img style={{height:'30px',width:'30px'}} src={loc} alt="" />
         <div className="country">
           <div className="country-img">
             <img src={flag}/>
           </div>
-          India
+          {locationName ? (
+                // <p>{locationName.split(",").slice(0,2).join(", ")}</p>
+                <p style={{fontWeight:"600"}}>{locationName.split(",")[0]}</p>
+            ) : (
+                <p style={{fontWeight:"600"}}>Fetching location...</p>
+            )}
         </div>
         </div>
 

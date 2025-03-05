@@ -1,6 +1,6 @@
 const express = require('express');
 const { registerUser, loginUser, updateOneUser, getUserProfile, deleteUser } = require('../controllers/newControllers');
-const { addWorker, getWorker, deleteWorker } = require('../controllers/workerController');
+const { addWorker, getWorker, deleteWorker, rateWorker } = require('../controllers/workerController');
 
 const router = express.Router();
 
@@ -16,6 +16,7 @@ workerCategories.forEach(category => {
   router.post(`/add${category}`, addWorker);
   router.get(`/get${category}/:adminId`, getWorker);
   router.delete(`/delete${category}/:id`, deleteWorker);
+  router.post(`/rate${category}/:workerId`, rateWorker);
 });
 
 

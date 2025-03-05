@@ -4,9 +4,13 @@ import Header from '../../pages/header'
 import axios from 'axios'
 import '../../Styles/admin.css';
 import Plumb from '../../logos/plumbers.jpg'
+import Navi from '../../logos/greater-than-solid.svg';
+import profile from '../../logos/smiling-young-man-illustration_1308-174401.avif'
+
 
 const AdminPlumbingPage = () => {
   const user = useSelector((state) => state.auth.user);
+  const [selectWorker, setSelectWorker] = useState('');
   const [workers, setWorkers] = useState([]);
   const [newWorker, setNewWorker] = useState({
     workername: "",
@@ -30,7 +34,7 @@ const AdminPlumbingPage = () => {
         return;
       }
       const response = await axios.get(`http://localhost:5000/api/getplumber/${adminId}`);
-      setWorkers(response.data);
+      setWorkers(response.data.workers);
     } catch (error) {
       console.error("Error fetching workers:", error);
     }
@@ -56,10 +60,20 @@ const AdminPlumbingPage = () => {
     try {
       await axios.delete(`http://localhost:5000/api/deleteplumber/${id}`);
       setWorkers(workers.filter((worker) => worker._id !== id));
+      setSelectWorker('');
     } catch (error) {
       console.error("Error deleting worker:", error);
     }
   };
+
+  const opencard = (worker) => {
+          setSelectWorker(worker);
+  }
+
+  const closecard = () => {
+    setSelectWorker('');
+  }
+
 
   return (
     <div className="admin-page">
@@ -105,10 +119,11 @@ const AdminPlumbingPage = () => {
                   <td>{worker.address}</td>
                   <td>{worker.experience}</td>
                   <td>{worker.specialty}</td>
-                  <td>
-                    <button style={{display:'block',position:'relative',left:'28px'}} onClick={() => window.location.href = `tel:${worker.contact}`} className="contact-btn">Call</button>
-                    <button onClick={() => handleDeleteWorker(worker._id)} className="delete-btn">Delete</button>
-                  </td>
+               <td>
+                   <img className='navi' src={Navi} alt="" onClick={()=>opencard(worker)} />
+               
+                 </td>
+
                 </tr>
               ))}
             </tbody>
@@ -119,6 +134,32 @@ const AdminPlumbingPage = () => {
       </div>
 
       <img className="img" src={Plumb} alt="Plumber" />
+
+       {selectWorker && (
+        <div className="worker-card">
+          <div className="worker-card-content">
+            <div className="profile-pic">
+                <img src={profile} alt="Profile" />
+             </div>
+            <span className="close-btn" onClick={closecard}>
+              &times;
+            </span>
+            <h3 style={{marginLeft:'100px'}}>{selectWorker.workername}</h3>
+            <p>📍 <span style={{fontWeight:'bolder'}}>Address:</span> {selectWorker.address}</p>
+            <p>📞 <span style={{fontWeight:'bolder'}}>Contact:</span>  {selectWorker.contact}</p>
+            <p>🛠 <span style={{fontWeight:'bolder'}}>Specialty:</span> {selectWorker.specialty}</p>
+            <p>⭐ <span style={{fontWeight:'bolder'}}>Experience:</span>  {selectWorker.experience} years</p>
+            <p>⭐<span style={{fontWeight:'bolder'}}>Ratings:</span>{selectWorker.averageRating}</p>
+
+            </div>
+             
+             <div style={{display:'flex',justifyContent:'space-around',marginTop:'20px',marginLeft:'-40px'}}>
+            <button style={{display:'block',position:'relative',left:'32px'}} onClick={() => window.location.href = `tel:${selectWorker.contact}`} 
+                   className="contact-btn">Call</button>
+                   <button className='delete-btn' onClick={() => handleDeleteWorker(selectWorker._id)} >Delete</button>
+            </div>
+        </div>
+      )}
     </div>
   );
 };
