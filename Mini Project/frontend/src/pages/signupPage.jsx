@@ -18,69 +18,121 @@ const SignupPage = () => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [touched, setTouched] = useState({});
+
+  const validateField = (name,value) => {
+
+    let error = "";
+
+    if (name === "name") {
+      if (!value) error = "Name is required";
+      else if (!/^[a-zA-Z]{3,10}$/.test(value)) error = "Name must be 3-10 letters (alphabets only)";
+    }
+
+    if (name === "mobileNumber") {
+      if (!value) error = "Mobile Number is required";
+      else if (!/^[6789]\d{9}$/.test(value)) error = "Invalid mobile number";
+    }
+
+    if (name === "email") {
+      if (!value) error = "Email is required";
+      else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) error = "Enter a valid email address";
+    }
+
+    if (name === "password") {
+      if (!value) error = "Password is required";
+      else if (!/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value)) {
+        error = "Password must have 8+ chars, 1 uppercase, 1 number, 1 special char";
+      }
+    }
+
+    if (name === "confirmPassword") {
+      if (!value) error = "Confirm Password is required";
+      else if (value !== form.password) error = "Passwords do not match";
+    }
+
+    if (name === "category" && form.role === "admin") {
+      if (!value || value.length === 0) error = "Category is required for Admin role";
+    }
+
+    return error;
+
+  } 
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+
+    if (touched[name]) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: validateField(name, value),
+      }));
+    }
+    };
+
+    const handleBlur = (e) => {
+      const { name, value } = e.target;
+      setTouched((prev) => ({ ...prev, [name]: true }));
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: validateField(name, value) }));
+    };
+
+    const validateForm = () => {
+      const newErrors = {};
+      Object.keys(form).forEach((key) => {
+        newErrors[key] = validateField(key, form[key]);
+      });
+      setErrors(newErrors);
+      return Object.values(newErrors).every((error) => !error);
+    };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const newErrors = {};
-    if (!form.name) newErrors.name = 'Name is required';
-    if (!form.mobileNumber) newErrors.mobileNumber = 'Mobile Number is required';
-    if (!form.email) newErrors.email = 'Email is required';
-    if (!form.password) newErrors.password = 'Password is required';
-    if (form.password !== form.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
-    if (form.role === 'admin' && (!form.category || form.category.length === 0)) {
-      newErrors.category = 'Category is required for Admin role';
+    if (!validateForm()) {
+      setLoading(false);
+      return;
     }
 
-    setErrors(newErrors);
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
 
-    if (Object.keys(newErrors).length === 0) {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
+        try {
+          const userData = {
+            ...form,
+            category: form.role === "admin" ? form.category : undefined,
+            location: { latitude, longitude },
+          };
 
-          try {
-            const userData = {
-              ...form,
-              category: form.role === "admin" ? form.category : undefined,
-              location: { latitude, longitude }, 
-            };
+          const response = await axios.post('http://localhost:5000/api/register', userData);
 
-            const response = await axios.post('http://localhost:5000/api/register', userData);
-
-            if (response.status === 201) {
-              alert('Account created successfully!');
-              console.log('User created:', response.data);
-              navigate('/login');
-            } else {
-              console.error('Unexpected response status:', response.status);
-            }
-          } catch (error) {
-            console.error('Error during signup:', error);
-            if (error.response) {
-              console.error('Server Response:', error.response.data);
-              setErrors({ form: error.response.data.message || "Something went wrong!" });
-            } else {
-              console.error('Unknown error:', error);
-            }
-          } finally {
-            setLoading(false);
+          if (response.status === 201) {
+            alert('Account created successfully!');
+            console.log('User created:', response.data);
+            navigate('/login');
+          } else {
+            console.error('Unexpected response status:', response.status);
           }
-        }, (error) => {
+        } catch (error) {
+          console.error('Error during signup:', error);
+          if (error.response) {
+            console.error('Server Response:', error.response.data);
+            setErrors({ form: error.response.data.message || "Something went wrong!" });
+          } else {
+            console.error('Unknown error:', error);
+          }
+        } finally {
           setLoading(false);
-          alert("Location access denied! Please allow location to proceed.");
-        });
-      } else {
-        alert("Geolocation is not supported by your browser.");
+        }
+      }, (error) => {
         setLoading(false);
-      }
+        alert("Location access denied! Please allow location to proceed.");
+      });
     } else {
+      alert("Geolocation is not supported by your browser.");
       setLoading(false);
     }
   };
@@ -94,22 +146,24 @@ const SignupPage = () => {
       <h2 style={{ color: 'black', marginTop: '0px', paddingBottom: '20px' }}>Create Account</h2>
       <form onSubmit={handleSubmit}>
         <label>Full Name</label>
-        <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Full Name" />
-        {errors.name && <p className="error">{errors.name}</p>}
+        <input type="text" name="name" value={form.name} onChange={handleChange} onBlur={handleBlur} placeholder="Full Name" />
+        {touched.name && errors.name && <p className="error">{errors.name}</p>}
 
         <label>Mobile Number</label>
-        <input type="text" name="mobileNumber" value={form.mobileNumber} onChange={handleChange} placeholder="Mobile Number" />
-        {errors.mobileNumber && <p className="error">{errors.mobileNumber}</p>}
-
+        <input type="text" name="mobileNumber" value={form.mobileNumber} onChange={handleChange} onBlur={handleBlur} placeholder="Mobile Number" />
+        {touched.mobileNumber && errors.mobileNumber && <p className="error">{errors.mobileNumber}</p>}
+        
         <label>Email</label>
-        <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email Address" />
-        {errors.email && <p className="error">{errors.email}</p>}
+        <input type="email" name="email" value={form.email} onChange={handleChange} onBlur={handleBlur} placeholder="Email Address" />
+        {touched.email && errors.email && <p className="error">{errors.email}</p>}
 
         <label>Password</label>
-        <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="Password" />
+        <input type="password" name="password" value={form.password} onChange={handleChange} onBlur={handleBlur} placeholder="Password" />
+        {touched.password && errors.password && <p className="error">{errors.password}</p>}
+
         <label>Confirm Password</label>
-        <input type="password" name="confirmPassword" value={form.confirmPassword} onChange={handleChange} placeholder="Confirm Password" />
-        {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
+        <input type="password" name="confirmPassword" value={form.confirmPassword} onChange={handleChange} onBlur={handleBlur}  placeholder="Confirm Password" />
+        {touched.confirmPassword && errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
 
         <label style={{ marginBottom: '5px' }}>Role</label>
         <select name="role" value={form.role} onChange={handleChange} style={{ height: '25px', borderRadius: '5px', color: 'white', backgroundColor: '#435a83' }}>
@@ -120,7 +174,7 @@ const SignupPage = () => {
         {form.role === 'admin' && (
           <>
             <label>Category (for Admins)</label>
-            <select name="category" value={form.category} onChange={handleChange} style={{ height: '25px', borderRadius: '5px', color: 'white', backgroundColor: '#435a83', marginTop: '10px' }}>
+            <select name="category" value={form.category} onChange={handleChange} onBlur={handleBlur} style={{ height: '25px', borderRadius: '5px', color: 'white', backgroundColor: '#435a83', marginTop: '10px' }}>
               <option value="">Select Category</option>
               <option value="plumber">Plumber</option>
               <option value="carpenter">Carpenter</option>
@@ -129,9 +183,10 @@ const SignupPage = () => {
               <option value="cleaner">Cleaner</option>
               <option value="mason">Mason</option>
             </select>
-            {errors.category && <p className="error">{errors.category}</p>}
+            {touched.category && errors.category && <p className="error">{errors.category}</p>}
           </>
         )}
+
         <p style={{ color: 'red', fontWeight: '700', marginTop: '10px' }}>{errors.form}</p>
 
         <button type="submit" className="signup-btn" disabled={loading}>

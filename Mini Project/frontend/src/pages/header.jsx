@@ -93,13 +93,22 @@ const [workers,setWorkers] = useState([]);
 
 useEffect(() => {
   const fetchWorkers = async () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
     try {
-      const response = await axios.get(`http://localhost:5000/api/get${user.categories}/${user.id}`);
-      setWorkers(response.data); 
+      const response = await axios.get(`http://localhost:5000/api/get${user.categories}/${user.id}`, {
+        params: { latitude, longitude }
+    });
+      setWorkers(response.data);
+   
     } catch (error) {
       console.error("Error fetching workers:", error);
     }
-  };
+    }
+    )};
+    };
 
   fetchWorkers();
 }, []);

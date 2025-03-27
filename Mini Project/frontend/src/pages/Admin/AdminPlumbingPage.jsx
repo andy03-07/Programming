@@ -26,35 +26,61 @@ const AdminPlumbingPage = () => {
   }, []);
 
   const fetchWorkers = async () => {
-    try {
-      const adminId = user?.id; 
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
 
-      if (!adminId) {
-        console.error("Admin ID is missing");
-        return;
-      }
-      const response = await axios.get(`http://localhost:5000/api/getplumber/${adminId}`);
-      setWorkers(response.data.workers);
-    } catch (error) {
-      console.error("Error fetching workers:", error);
+            try {
+                const adminId = user?.id; 
+                if (!adminId) {
+                    console.error("Admin ID is missing");
+                    return;
+                }
+
+                const response = await axios.get(`http://localhost:5000/api/getplumber/${adminId}`, {
+                    params: { latitude, longitude }
+                });
+
+                setWorkers(response.data.workers);
+            } catch (error) {
+                console.error("Error fetching workers:", error);
+            }
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
     }
-  };
+};
 
   const handleChange = (e) => {
     setNewWorker({ ...newWorker, [e.target.name]: e.target.value });
   };
 
   const handleAddWorker = async () => {
-    try {
-      const response = await axios.post("http://localhost:5000/api/addplumber", newWorker);
-      setWorkers([...workers, response.data]);
-      setNewWorker({ workername: "", contact: "", address: "", experience: "", specialty: "" });
-      fetchWorkers();
-    } catch (error) {
-      console.error("Error adding worker:", error);
-      alert('Please fill out all fields.');
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            try {
+                const response = await axios.post("http://localhost:5000/api/addplumber", {
+                    ...newWorker,
+                    location: { latitude, longitude }, 
+                });
+
+                setWorkers([...workers, response.data]);
+                setNewWorker({ workername: "", contact: "", address: "", experience: "", specialty: "" });
+                fetchWorkers();
+            } catch (error) {
+                seterrors(error.response.data.message);
+                console.error("Error adding worker:", error);
+                alert('Please fill out all fields.');
+            }
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
     }
-  };
+};
 
   const handleDeleteWorker = async (id) => {
     try {

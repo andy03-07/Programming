@@ -8,6 +8,8 @@ const adminSchema = new mongoose.Schema(
     password: { type: String, required: true },
     role: { type: String, default: "admin" }, 
     category: {  type: String,required: true },
+    otp: String,
+    otpExpiry: Date,
     location: { 
       latitude: Number,
       longitude: Number,

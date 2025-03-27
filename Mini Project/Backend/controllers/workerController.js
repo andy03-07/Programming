@@ -37,23 +37,30 @@ const getWorker = async (req, res) => {
   try {
     let workers;
     const category = req.path.split('/')[1].replace('get', '');
-    const {adminId} = req.params;
-    const { latitude, longitude } = req.query;
+    const { adminId } = req.params;
+    let { latitude, longitude } = req.query;
 
-    if (!latitude || !longitude) {
-      return res.status(400).json({ error: "User location (latitude & longitude) is required" });
+    latitude = parseFloat(latitude);
+    longitude = parseFloat(longitude);
+
+    if (isNaN(latitude) || isNaN(longitude)) {
+      return res.status(400).json({ error: "Latitude & Longitude must be valid numbers" });
     }
 
     if (!adminId) {
       return res.status(400).json({ error: "Admin ID is required" });
-    }else if(adminId ==="all"){
-      workers = await worker.find({category, "location.latitude": { $gte: latitude - 0.1, $lte: latitude + 0.1 },
-        "location.longitude": { $gte: longitude - 0.1, $lte: longitude + 0.1 }
-      });
-      
-    }else{
-    workers = await worker.find({adminId });
     }
+
+    if (adminId === "all") {
+      workers = await worker.find({
+        category,
+        "location.latitude": { $gte: latitude - 0.1, $lte: latitude + 0.1 },
+        "location.longitude": { $gte: longitude - 0.1, $lte: longitude + 0.1 },
+      });
+    } else {
+      workers = await worker.find({ adminId });
+    }
+
     if (workers.length === 0) {
       return res.status(404).json({ message: "No workers found for this category" });
     }
@@ -65,11 +72,13 @@ const getWorker = async (req, res) => {
       return { ...worker.toObject(), averageRating };
     });
 
-    res.json({workers: workersWithRatings});
+    res.json({ workers: workersWithRatings });
   } catch (error) {
+    console.error("Error in getWorker:", error);
     res.status(500).json({ error: "Failed to fetch workers", details: error.message });
   }
 };
+
 
 
   const deleteWorker = async (req, res) => {
