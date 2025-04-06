@@ -1,0 +1,16 @@
+.class{
+ height: 100px;
+ width: 100px;
+ background-color: aliceblue;
+}
+
+.dark{
+    background-color: black;
+    color: aliceblue;
+}
+
+.light{
+    background-color: antiquewhite;
+    color: black;
+}
+
