@@ -17,6 +17,7 @@ import MasonPage from './pages/Workers/MasonPage';
 import AdminMasonPage from './pages/Admin/AdminMasonPage';
 import PaintingPage from './pages/Workers/PaintingPage';
 import AdminPaintingPage from './pages/Admin/AdminPaintingPage';
+import PaymentPage from './pages/Admin/payments';
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
                         <Route path="/admin/mason" element={<AdminMasonPage />} />
                         <Route path="/admin/cleaner" element={<AdminCleaningPage />} />
                         <Route path="/admin/electrician" element={<AdminElectricianPage />} />
+                        <Route path='/payments' element={<PaymentPage/>}/>
                     </Route>
 
                     <Route path="/plumber" element={<PlumbingPage />} />

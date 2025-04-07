@@ -15,8 +15,10 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 3rem;
-  background-color: #003366;
+  background-color:#2C3E50;
   color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(to right, #1f2d3a, #2C3E50, #3a4d62);
 }
 
 .logo img {
@@ -45,15 +47,21 @@ body {
   justify-content: center;
   align-items: center;
   height: 30px;
-  border: 0.01px solid white;
+  border: none;
+  outline: none;
   color: #cccccc;
   border-radius: 3px;
   padding-left: 5px;
   height: 30px;
-  font-size: 15px;
+  font-size: 17px;
+  font-weight: bold;
   border-style: none;
-  background-color: #003366;
+  background-color: transparent;
   cursor: pointer;
+}
+
+.pan3-select option{
+  background-color:#2C3E50;
 }
 
 .location{
@@ -420,20 +428,198 @@ cursor: pointer;
   transition: 0.3s;
 }
 
+.announcement-bar {
+  background-color: #FF9800;
+  color: white;
+  text-align: center;
+  padding: 10px 16px;
+  font-weight: 500;
+  font-size: 15px;
+  position: relative;
+}
+
+.announcement-bar .close-btn {
+  position: absolute;
+  right: 16px;
+  cursor: pointer;
+  font-size: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hero-section {
+  background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), 
+              url('/your-image.jpg') center/cover no-repeat;
+  color: white;
+  text-align: center;
+  padding: 80px 20px 60px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.hero-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.hero-content h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.hero-content p {
+  font-size: 18px;
+  margin-bottom: 25px;
+}
+
+.hero-content button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  background-color: #3F51B5;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.3s ease;
+}
+
+.hero-content button:hover {
+  background-color: #5c6bc0;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 60px 15px 40px;
+  }
+
+  .hero-content h1 {
+    font-size: 28px;
+  }
+
+  .hero-content p {
+    font-size: 16px;
+  }
+
+  .hero-content button {
+    font-size: 15px;
+  }
+}
+
  
 .categories-section {
-  height: 50vh;
+  height: 40vh;
   padding: 3rem;
   padding-top: 0.001rem;
   text-align: center;
-  background-color: #b4c8e9; 
+  background-color: #e7eaf0; 
   color: white;
 }
 
 .categories-section h2 {
   font-size: 2rem;
   margin-bottom: 2rem;
+  color: black;
 }
+
+.categories-section span{
+  color: black;
+}
+
+.carousel-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 20px;
+  background-color: aliceblue; 
+
+}
+
+.carousel-item {
+  display: flex;
+  align-items:center;
+  justify-content:space-around;
+}
+
+.carousel-item.left {
+  flex-direction: row;
+}
+
+.carousel-item.right {
+  flex-direction: row-reverse;
+}
+.image-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.image-wrapper img {
+  width: 800px;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.image-label {
+  position: absolute;
+  bottom: 15px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 20px;
+  font-weight: 500;
+  pointer-events: none; 
+}
+
+.line1{
+  margin-left: 25px;
+  height: 6px;
+  width: 600px;
+  background-color: rgb(131, 129, 129);
+  position: relative;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.carousel-item.right .line1{
+  margin-right: 35px;
+}
+.carousel-item h2 {
+  max-width: 600px;
+  margin: 0 20px;
+  font-size: 40px;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .carousel-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .carousel-item img {
+    width: 100%;
+    height: auto;
+  }
+
+  .carousel-item h2 {
+    margin: 20px 0 0;
+  }
+}
+
+
+
 
 .worker-categories {
   display: flex;
@@ -489,119 +675,4 @@ footer {
 
 footer p {
   font-size: 1rem;
-}
-
-.carousel-wrapper {
-  display: flex;
-  align-items: flex-start;
-  position: relative;
-  padding: 20px;
-}
-
-/* Main Carousel Container */
-.carousel-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-   width: 100%;
-   height: 500px;
-  /* max-width: 800px; */
-  margin: 0 auto;
-  padding: 20px;
-  padding-top: 6px;
-}
-
-/* Image Section */
-.carousel-image-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  width: 200%;
-  height: 480px;
-  padding: 10px;
-}
-
-.carousel-image {
-  width: 95%;
-  height: 450px;
-  object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transition: opacity 0.5s ease;
-}
-
-/* Image Info Overlay */
-.carousel-info {
-  position: absolute;
-  bottom: 10px;
-  right: 15px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 0.9rem;
-}
-.carousel-category {
-  position: absolute;
-  bottom: 400px; /* Position the text at the bottom of the image */
-  left: 10%;
-  transform: translateX(-50%);
-  color: #ffffff; /* White text color for contrast */
-  font-size: 24px;
-  font-weight: bold;
-  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-align:center;
-}
-.carousel-text {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  color: #333;
-}
-.carousel-text h3 {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #5395f8;
-}
-
-.carousel-text p {
-  font-size: 30px;
-  font-weight: bold;
-  line-height: 1.6;
-  color: #2c6180;
-}
-
-/* Navigation Buttons */
-.carousel-btn {
-  position: absolute;
-  top: 50%;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  border: none;
-  padding: 10px;
-  font-size: 24px;
-  cursor: pointer;
-  border-radius: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  transition: background-color 0.3s;
-}
-
-.carousel-btn:hover {
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-.prev-btn {
-  left: 10px;
-}
-
-.next-btn {
-  right: 10px;
 }

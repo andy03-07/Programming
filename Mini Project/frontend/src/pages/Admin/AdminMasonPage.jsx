@@ -1,5 +1,6 @@
 import React, { useState , useEffect} from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Header from '../header';
 import axios from 'axios'
 import MasonI from  '../../logos/masoni.jpg'
@@ -9,6 +10,7 @@ import profile from '../../logos/smiling-young-man-illustration_1308-174401.avif
 
 
 const AdminMasonPage = () => {
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
       const [selectWorker, setSelectWorker] = useState('');
     const [errors,seterrors] = useState('');
@@ -101,6 +103,15 @@ const AdminMasonPage = () => {
     const closecard = () => {
       setSelectWorker('');
     };
+  
+    const handleOpenPaymentPage = () =>{
+      navigate('/payments' , {
+        state : {
+          user : user,
+          worker : selectWorker
+        }
+      })
+    }
 
   return (
     <div className="admin-page">
@@ -183,6 +194,10 @@ const AdminMasonPage = () => {
                  <div style={{display:'flex',justifyContent:'space-around',marginTop:'20px',marginLeft:'-40px'}}>
                 <button style={{display:'block',position:'relative',left:'32px'}} onClick={() => window.location.href = `tel:${selectWorker.contact}`} 
                        className="contact-btn">Call</button>
+
+                  <button className='delete-btn' style={{backgroundColor:'goldenrod' , marginLeft:"28px"}} 
+                   onClick={handleOpenPaymentPage}>Payments</button>
+
                        <button className='delete-btn' onClick={() => handleDeleteWorker(selectWorker._id)} >Delete</button>
                 </div>
             </div>

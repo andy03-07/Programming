@@ -63,7 +63,7 @@ const loginUser = async (req, res) => {
     res.status(200).json({ 
     message: role === "admin" ? 'Admin logged in successfully' : 'User logged in successfully',
     user: { id: user._id, name: user.name, email: user.email, role: user.role, categories: user.category ,mobileNumber:user.mobileNumber,
-      password:user.password, location:user.location
+      password:user.password, location:user.location , payments:user.payments
     }
     });
   } catch (err) {

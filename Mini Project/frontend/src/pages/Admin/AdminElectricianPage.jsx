@@ -1,5 +1,6 @@
 import React, { useState , useEffect} from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Header from '../header';
 import axios from 'axios'
 import E from '../../logos/istockphoto-1354891373-612x612.jpg'
@@ -9,6 +10,7 @@ import profile from '../../logos/smiling-young-man-illustration_1308-174401.avif
 
 const AdminElectricianPage = () => {
   const user = useSelector((state) => state.auth.user);
+  const navigate = useNavigate();
    const [selectWorker, setSelectWorker] = useState('');
   const [errors,seterrors] = useState('');
     const [workers, setWorkers] = useState([]);
@@ -100,6 +102,16 @@ const AdminElectricianPage = () => {
       setSelectWorker('');
     };
 
+    const handleOpenPaymentPage = () =>{
+      navigate('/payments' , {
+        state : {
+          user : user,
+          worker : selectWorker
+        }
+      })
+    }
+
+
   return (
     <div className="admin-page">
       <div>
@@ -181,6 +193,10 @@ const AdminElectricianPage = () => {
                                <div style={{display:'flex',justifyContent:'space-around',marginTop:'20px',marginLeft:'-40px'}}>
                               <button style={{display:'block',position:'relative',left:'32px'}} onClick={() => window.location.href = `tel:${selectWorker.contact}`} 
                                      className="contact-btn">Call</button>
+
+                                  <button className='delete-btn' style={{backgroundColor:'goldenrod' , marginLeft:"28px"}} 
+                                  onClick={handleOpenPaymentPage}>Payments</button>
+
                                      <button className='delete-btn' onClick={() => handleDeleteWorker(selectWorker._id)} >Delete</button>
                               </div>
                           </div>

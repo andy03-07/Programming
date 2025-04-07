@@ -21,6 +21,7 @@ const SignupPage = () => {
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState({});
   const [otpSent, setOtpSent] = useState(false);
+  const [show,setShow] = useState(true);
 
   const validateField = (name,value) => {
 
@@ -108,6 +109,7 @@ const SignupPage = () => {
         try {
           const response = await axios.post("http://localhost:5000/api/verify-otp",{ email:form.email , phone:form.mobileNumber , otp:form.otp});
           alert(response.data.message);
+          setShow(false);
         } catch (error) {
           console.log(error);
           alert("Invalid OTP");
@@ -214,7 +216,9 @@ const SignupPage = () => {
             {touched.category && errors.category && <p className="error">{errors.category}</p>}
           </>
         )}
-
+       
+       { show && (
+        <>
         <label>OTP Verification</label>
         <select style={{ height: '25px', borderRadius: '5px', color: 'white', backgroundColor: '#435a83', marginRight:'10px' , marginTop:'5px'}}>
           <option value="email">Email</option>
@@ -228,7 +232,8 @@ const SignupPage = () => {
             <button className="send-btn" type="button" onClick={verifyOtp} disabled={loading}>Verify OTP</button>
           </>
         )}
-
+        </>
+      )}
         <p style={{ color: 'red', fontWeight: '700', marginTop: '10px' }}>{errors.form}</p>
 
         <button type="submit" className="signup-btn" disabled={loading}>

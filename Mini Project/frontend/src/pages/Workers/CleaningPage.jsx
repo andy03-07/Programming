@@ -1,5 +1,5 @@
-// src/pages/Workers/CleaningPage.js
 import React , {useEffect,useState}from 'react';
+import { useSelector } from 'react-redux';
 import axios from "axios"
 import '../../Styles/WorkerList.css';
 import Navi from '../../logos/greater-than-solid.svg';
@@ -7,10 +7,13 @@ import profile from '../../logos/smiling-young-man-illustration_1308-174401.avif
 
 
 const CleaningPage = () => {
+  const user = useSelector((state) => state.auth.user);
   const [workers,setWorkers] = useState([]);
   const [selectedRating, setSelectedRating] = useState(0);
     const [submittedRating, setSubmittedRating] = useState({});
     const [selectWorker, setSelectWorker] = useState('');
+      const [box,setBox] = useState(false);
+      const [amount,setAmount] = useState(0);
 
   useEffect(() => {
     fetchWorkers();
@@ -62,49 +65,60 @@ const submitRating = async (workerId) => {
   }
 };
 
+const handleChange = (e) =>{
+  setAmount(e.target.value);
+}
+
 const loadRazorpayScript = () => {
-  return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-  });
+return new Promise((resolve) => {
+const script = document.createElement("script");
+script.src = "https://checkout.razorpay.com/v1/checkout.js";
+script.onload = () => resolve(true);
+script.onerror = () => resolve(false);
+document.body.appendChild(script);
+});
 };
 
 
 const handlePayment = async () => {
-  const res = await loadRazorpayScript();
+const res = await loadRazorpayScript();
 
-  if (!res) {
-    alert("Failed to load Razorpay SDK");
-    return;
+if (!res) {
+alert("Failed to load Razorpay SDK");
+return;
 }
+setBox(false);
+const { data } = await axios.post("http://localhost:5000/api/create-order" , {amount : amount});
 
-  const { data } = await axios.post("http://localhost:5000/api/create-order" , {amount : 1});
+const options = {
+key: "rzp_test_jqGmQ1R8KhN9US",
+amount: data.amount,
+currency: "INR",
+name: "Worker Finder",
+description: "Payment for Worker",
+order_id: data.id,
+handler: async function (response) {
+alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
 
-  const options = {
-      key: "rzp_test_jqGmQ1R8KhN9US", 
-      amount: data.amount,
-      currency: "INR",
-      name: "workerfinder",
-      description: "Test Transaction",
-      order_id: data.id,
-      handler: function (response) {
-          alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
-      },
-      prefill: {
-          name: "Anurag",
-          email: "anurag@example.com",
-          contact: "9876543210",
-      },
-      theme: {
-          color: "#3399cc",
-      },
-  };
+await axios.post("http://localhost:5000/api/add-payment", {
+adminId : selectWorker.adminId,
+username : user.name,
+userContact : user.mobileNumber,
+payment_id: response.razorpay_payment_id,
+order_id: response.razorpay_order_id,
+signature: response.razorpay_signature,
+amount: data.amount / 100,
+workerId: selectWorker._id,
+method: "razorpay",
+});
+},
+theme: {
+color: "#3399cc",
+},
+};
 
-  const paymentObject = new window.Razorpay(options);
-  paymentObject.open();
+const paymentObject = new window.Razorpay(options);
+paymentObject.open();
 };
 
   return (
@@ -191,9 +205,17 @@ const handlePayment = async () => {
              <button style={{display:'block',position:'relative',left:'10px'}} onClick={() => window.location.href = `tel:${selectWorker.contact}`} 
                     className="contact-btn">Call</button>
             
-              <button style={{display:'block',position:'absolute',right:'60px'}}className="contact-btn" onClick={handlePayment}>Pay</button>;
+            <button style={{display:'block',position:'absolute',right:'70px'}}className="contact-btn" onClick={() => {setBox(true)} }>Pay</button>;
 
              </div>
+             {box &&
+              (
+              <div style={{marginLeft:'80px',marginTop:'10px'}}>
+              <input type="text" onChange={handleChange} placeholder="Enter Amount" />
+              <button className="send-btn" type="button" onClick={handlePayment} >Proceed</button>
+              </div>
+              )
+            }
          </div>
        )}
      </div>

@@ -1,5 +1,6 @@
 import React, { useState , useEffect} from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../pages/header'
 import axios from 'axios'
 import '../../Styles/admin.css';
@@ -9,8 +10,8 @@ import profile from '../../logos/smiling-young-man-illustration_1308-174401.avif
 
 
 const AdminPlumbingPage = () => {
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
-  const [payment,setPayment] = useState(false);
   const [selectWorker, setSelectWorker] = useState(''); 
   const [workers, setWorkers] = useState([]);
 
@@ -96,18 +97,20 @@ const AdminPlumbingPage = () => {
 
   const opencard = (worker) => {
           setSelectWorker(worker);
-          console.log("User Payments Array:", user);
-          console.log("Selected Worker Object:", selectWorker);
             }
 
   const closecard = () => {
     setSelectWorker('');
   }
-  
-  const filteredPayments = user?.payments?.filter(
-    (payment) => String(payment.workerId) === String(selectWorker?._id)
-  ) || [];
-  
+
+  const handleOpenPaymentPage = () =>{
+    navigate('/payments' , {
+      state : {
+        user : user,
+        worker : selectWorker
+      }
+    })
+  }
 
   return (
     <div className="admin-page">
@@ -192,45 +195,12 @@ const AdminPlumbingPage = () => {
                    className="contact-btn">Call</button>
 
                    <button className='delete-btn' style={{backgroundColor:'goldenrod' , marginLeft:"28px"}} 
-                   onClick={()=>setPayment(true)}>Payments</button>
+                   onClick={handleOpenPaymentPage}>Payments</button>
 
                    <button className='delete-btn' onClick={() => handleDeleteWorker(selectWorker._id)} >Delete</button>
               </div>
         </div>
       )}
-      {payment && (
-          <div className='list-container' style={{position:'absolute',top:'500px'}}>
-            <h2>
-            Payments for: {selectWorker.workername}
-            </h2>
-
-            {filteredPayments.length === 0 ? (
-            <p className="text-gray-600">No payments found for this worker.</p>
-             ) : (
-            <table className="worker-table">
-            <thead>
-              <tr>
-                <th>Client Name</th>
-                <th>Contact</th>
-                <th>Amount</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-
-            <tbody className='body'>
-              {filteredPayments.map((payment, index) => (
-                <tr key={index}>
-                  <td>{payment.client}</td>
-                  <td>{payment.contact}</td>
-                  <td>{payment.amount}</td>
-                  <td>{Date(payment.date).toLocaleString()}</td>
-                   </tr>
-              ))}
-            </tbody>
-          </table>
-             )};
-          </div>
-        )}
 
     </div>
   );

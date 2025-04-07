@@ -41,6 +41,7 @@ const togglePassword = () => {
   const deleteUser = async () => {
     try {
       await axios.delete(`http://localhost:5000/api/delete/${user.id}`);
+      alert("Account Deleted Successfully!");
       handleLogout();
     } catch (error) {
       setError(error.response.data.message);

@@ -24,6 +24,8 @@ import globe from '../logos/globe-solid.svg';
 import noti from '../logos/bell-solid.svg';
 import search from '../logos/magnifying-glass-solid.svg';
 import help from '../logos/circle-info-solid.svg'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const categories = [
   { name: "Plumbing", image: plumbing, path: "/plumber" },
@@ -41,6 +43,7 @@ const HomePage = () => {
   const [locationName, setLocationName] = useState("");
   const [showChat, setShowChat] = useState(false);
   const [message, setMessage] = useState("");
+  const [showAnnouncement, setShowAnnouncement] = useState(true);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(async (position) => {
@@ -61,6 +64,16 @@ const HomePage = () => {
             console.error("Error fetching location:", error);
         }
     });
+}, []);
+
+useEffect(() => {
+  AOS.init({
+    duration: 1000,
+    once: false,
+    offset: 120,
+    easing: 'ease-in-out',
+    mirror:true,
+  });
 }, []);
 
   const handleChatToggle = () => {
@@ -91,38 +104,6 @@ const HomePage = () => {
     }, 1500);
     return () => clearInterval(interval); 
   }, []);
-  
-  
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const carouselItems = [
-    { image: plu, category: "Plumbing",path: "/plumber" },
-    { image: car, category: "Carpentry",path: "/carpenter" },
-    { image: cle, category: "Cleaning", path: "/cleaner" },
-    { image: ele, category: "Electrical",path: "/electrician" },
-    { image: mas, category: "Masonry",path: "/mason" },
-    { image: pain, category: "Painting" ,path: "/painter"},
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) =>
-        prevIndex === carouselItems.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [carouselItems.length]);
-   
-  const goToNextImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === carouselItems.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const goToPreviousImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? carouselItems.length - 1 : prevIndex - 1
-    );
-  };
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
@@ -299,67 +280,147 @@ const HomePage = () => {
             <div className='help'>
               <img src={help} style={{height:'35px',width:'35px'}}  alt="" />
               <div className='ihelp'>
-                      <h1 style={{fontSize:'20px', color:'black', textAlign:'center'}}>Contact Us:-</h1>
-                       <p style={{color:'black',fontSize:'18px',marginTop:'10px'}}>Need help? Our support team is here for you!</p>
- 
-                         <div className="contact-info">
-                           <p style={{fontSize:'18px',marginBottom:'10px'}}>📱 Customer Care: <strong style={{color:"black"}}>+91 98765 43210</strong></p>
-                           <p style={{fontSize:'18px',marginBottom:'15px'}}>📧 Email: <strong style={{color:'black'}}>support@example.com</strong></p>
-                         </div>
-                         
-                         <div style={{display:'flex'}}>
-                         <p style={{fontSize:'18px',marginBottom:'10px',color:'black'}}> <strong>💬 Or Want To Chat: </strong></p>
-                         <button className="chat-btn" onClick={handleChatToggle}>
-                           💬 Chat with Us
-                         </button>
-                         </div>
-                   
-                         {showChat && (
-                           <div className="chat-box">
-                             <p style={{color:'black',fontSize:'15px'}}>Welcome! How can we help you?</p>
-                             <input
-                               type="text"
-                               placeholder="Type your message..."
-                               value={message}
-                               onChange={(e) => setMessage(e.target.value)}
-                             />
-                             <button className="send-btn" onClick={handleSendMessage}>
-                               Send
-                             </button>
-                           </div>
-                         )}
-                                        </div>
-                                 </div>  
-                            
+<h1 style={{fontSize:'20px', color:'black', textAlign:'center'}}>Contact Us:-</h1>
+ <p style={{color:'black',fontSize:'18px',marginTop:'10px'}}>Need help? Our support team is here for you!</p>
+   <div className="contact-info">
+     <p style={{fontSize:'18px',marginBottom:'10px'}}>📱 Customer Care: <strong style={{color:"black"}}>+91 98765 43210</strong></p>
+     <p style={{fontSize:'18px',marginBottom:'15px'}}>📧 Email: <strong style={{color:'black'}}>support@example.com</strong></p>
+   </div>
+   
+   <div style={{display:'flex'}}>
+   <p style={{fontSize:'18px',marginBottom:'10px',color:'black'}}> <strong>💬 Or Want To Chat: </strong></p>
+   <button className="chat-btn" onClick={handleChatToggle}>
+     💬 Chat with Us
+   </button>
+   </div>
+   {showChat && (
+     <div className="chat-box">
+       <p style={{color:'black',fontSize:'15px'}}>Welcome! How can we help you?</p>
+       <input
+         type="text"
+         placeholder="Type your message..."
+         value={message}
+         onChange={(e) => setMessage(e.target.value)}
+       />
+       <button className="send-btn" onClick={handleSendMessage}>
+         Send
+       </button>
+         </div>
+       )}
+     </div>
+     </div>  
+                          
         </div>
        </header>
- 
-       {/* Carousel Section */}
-       <div className="carousel-container">
-      <div className="carousel-image-container">
-        <img style={{cursor:'pointer'}}
-          src={carouselItems[currentImageIndex].image}
-          alt={`Slide ${currentImageIndex + 1}`}
-          className="carousel-image"
-          onClick={() => handleCategoryClick(carouselItems[currentImageIndex].path)}
-        />
-      <div className="carousel-category">{carouselItems[currentImageIndex].category}</div>
+       
+       <div>
+  {!user && (
+    <>
+      {showAnnouncement && (
+        <div className="announcement-bar">
+          🚀 New: Now serving in more cities!
+          <span className="close-btn" onClick={() => setShowAnnouncement(false)}>×</span>
+        </div>
+      )}
+
+      <div className="hero-section">
+        <div className="hero-content">
+          <h1>Welcome to Worker Finder</h1>
+          <p>Skilled professionals at your service – anytime, anywhere.</p>
+          <button onClick={() => navigate('/signup')}>
+            Get Started
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              fill="white"
+              viewBox="0 0 24 24"
+              style={{ marginLeft: '8px' }}
+            >
+              <path
+                d="M13 5l7 7-7 7M5 12h14"
+                stroke="white"
+                strokeWidth="2"
+                fill="none"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </>
+  )}
+</div>
+
+
+    <div className="carousel-container">
+      
+      <div className="carousel-item left" data-aos="fade-right">
+      <div className="image-wrapper" onClick={() => handleCategoryClick('/plumber')}>
+       <img src={plu} alt="Plumbing" />
+      <span className="image-label">Plumbing</span>
+     </div>
+     <div className='line1'></div>
+          <h2>
+          Find skilled professionals for Plumbing services to meet all your needs.
+        </h2>
       </div>
 
-      {/* Text Content on the Right */}
-      <div className="carousel-text">
-        <p>Find skilled professionals for {carouselItems[currentImageIndex].category.toLowerCase()} services to meet all your needs.</p>
-            
+      <div className="carousel-item right" data-aos="fade-left">
+      <div className="image-wrapper" onClick={() => handleCategoryClick('/carpenter')}>
+       <img src={car} alt="Carpentry" />
+      <span className="image-label">Carpentry</span>
+     </div>
+     <div className='line1'></div>
+       <h2>
+          Find skilled professionals for Carpentry services to meet all your needs.
+        </h2>
       </div>
 
-      {/* Manual Controls */}
-      <button className="carousel-btn prev-btn" onClick={goToPreviousImage}>
-        &#10094;
-      </button>
-      <button className="carousel-btn next-btn" onClick={goToNextImage}>
-        &#10095;
-      </button>
+      <div className="carousel-item left" data-aos="fade-right">
+      <div className="image-wrapper" onClick={() => handleCategoryClick('/cleaner')}>
+       <img src={cle} alt="Cleaning" />
+      <span className="image-label">Cleaning</span>
+     </div>        
+     <div className='line1'></div>
+     <h2>
+          Find skilled professionals for Cleaning services to meet all your needs.
+        </h2>
+      </div>
+
+      <div className="carousel-item right" data-aos="fade-left">
+      <div className="image-wrapper" onClick={() => handleCategoryClick('/electrician')}>
+       <img src={ele} alt="Electrician" />
+      <span className="image-label">Electrician</span>
+     </div>        
+     <div className='line1'></div>
+     <h2>
+          Find skilled professionals for Electrical services to meet all your needs.
+        </h2>
+      </div>
+
+      <div className="carousel-item left" data-aos="fade-right">
+      <div className="image-wrapper" onClick={() => handleCategoryClick('/mason')}>
+       <img src={mas} alt="Mason" />
+      <span className="image-label">Mason</span>
+     </div>        
+     <div className='line1'></div>
+     <h2>
+          Find skilled professionals for Mason services to meet all your needs.
+        </h2>
+      </div>
+
+      <div className="carousel-item right" data-aos="fade-left">
+      <div className="image-wrapper" onClick={() => handleCategoryClick('/painter')}>
+       <img src={pain} alt="Painting" />
+      <span className="image-label">Painting</span>
+     </div>        
+     <div className='line1'></div>
+     <h2>
+          Find skilled professionals for Painting services to meet all your needs.
+        </h2>
+      </div>
     </div>
+
 
       {/* Work Categories Section */}
    <section className="categories-section">
